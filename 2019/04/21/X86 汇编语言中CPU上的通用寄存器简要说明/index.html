@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>X86汇编语言中CPU上的通用寄存器简要说明 | xd-protein</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="X86 汇编语言中CPU上的通用寄存器简要说明   eax, ebx, ecx, edx, esi, edi, ebp, esp等都是X86 汇编语言中CPU上的通用寄存器的名称，是32位的寄存器。如果用C语言来解释，可以把这些寄存器当作变量看待。  比方说：add eax,-2 ;   //可以认为是给变量eax加上-2这样的一个值。  这些32位寄存器有多种用途，但每一个都有“专长”，有各自">
+<meta property="og:type" content="article">
+<meta property="og:title" content="X86汇编语言中CPU上的通用寄存器简要说明">
+<meta property="og:url" content="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/index.html">
+<meta property="og:site_name" content="xd-protein">
+<meta property="og:description" content="X86 汇编语言中CPU上的通用寄存器简要说明   eax, ebx, ecx, edx, esi, edi, ebp, esp等都是X86 汇编语言中CPU上的通用寄存器的名称，是32位的寄存器。如果用C语言来解释，可以把这些寄存器当作变量看待。  比方说：add eax,-2 ;   //可以认为是给变量eax加上-2这样的一个值。  这些32位寄存器有多种用途，但每一个都有“专长”，有各自">
+<meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-04-20T16:11:49.574Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="X86汇编语言中CPU上的通用寄存器简要说明">
+<meta name="twitter:description" content="X86 汇编语言中CPU上的通用寄存器简要说明   eax, ebx, ecx, edx, esi, edi, ebp, esp等都是X86 汇编语言中CPU上的通用寄存器的名称，是32位的寄存器。如果用C语言来解释，可以把这些寄存器当作变量看待。  比方说：add eax,-2 ;   //可以认为是给变量eax加上-2这样的一个值。  这些32位寄存器有多种用途，但每一个都有“专长”，有各自">
+  
+    <link rel="alternate" href="/atom.xml" title="xd-protein" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">xd-protein</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-X86 汇编语言中CPU上的通用寄存器简要说明" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" class="article-date">
+  <time datetime="2019-04-20T16:13:07.304Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      X86汇编语言中CPU上的通用寄存器简要说明
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><p>X86 汇编语言中CPU上的通用寄存器简要说明 </p>
+</li>
+<li><p>eax, ebx, ecx, edx, esi, edi, ebp, esp等都是X86 汇编语言中CPU上的通用寄存器的名称，是32位的寄存器。如果用C语言来解释，可以把这些寄存器当作变量看待。</p>
+</li>
+<li><p>比方说：add eax,-2 ;   //可以认为是给变量eax加上-2这样的一个值。</p>
+</li>
+<li><p>这些32位寄存器有多种用途，但每一个都有“专长”，有各自的特别之处。</p>
+</li>
+<li><p>EAX 是”累加器”(accumulator), 它是很多加法乘法指令的缺省寄存器。</p>
+</li>
+<li><p>EBX 是”基地址”(base)寄存器, 在内存寻址时存放基地址。</p>
+</li>
+<li><p>ECX 是计数器(counter), 是重复(REP)前缀指令和LOOP指令的内定计数器。</p>
+</li>
+<li><p>EDX 则总是被用来放整数除法产生的余数。</p>
+</li>
+<li><p>ESI/EDI 分别叫做”源/目标索引寄存器”(source/destination index),因为在很多字符串操作指令中, DS:ESI指向源串,而ES:EDI指向目标串.</p>
+</li>
+<li><p>EBP 是”基址指针”(BASE POINTER), 它最经常被用作高级语言函数调用的”框架指针”(frame pointer). 在破解的时候,经常可以看见一个标准的函数起始代码:<br>push ebp ; 保存当前ebp<br>mov ebp,esp ; EBP设为当前堆栈指针<br>sub esp, xxx ; 预留xxx字节给函数临时变量.<br>…<br>这样一来,EBP 构成了该函数的一个框架, 在EBP上方分别是原来的EBP, 返回地址和参数. EBP下方则是临时变量. 函数返回时作 mov esp,ebp/pop ebp/ret 即可.</p>
+</li>
+<li><p>ESP 专门用作堆栈指针，被形象地称为栈顶指针，堆栈的顶部是地址小的区域，压入堆栈的数据越多，ESP也就越来越小。 在32位平台上，ESP每次减少4字节。</p>
+</li>
+<li><p>esp：寄存器存放当前线程的栈顶指针<br>ebp：寄存器存放当前线程的栈底指针<br>eip：寄存器存放下一个CPU指令存放的内存地址，当CPU执行完当前的指令后，从EIP寄存器中读取下一条指令的内存地址，然后继续执行。<br>一般寄存器:AX、BX、CX、DX<br>AX:累積暫存器，BX:基底暫存器，CX:計數暫存器，DX:資料暫存器<br>索引暫存器:SI、DI<br>SI:來源索引暫存器，DI:目的索引暫存器<br>堆疊、基底暫存器:SP、BP<br>SP:堆疊指標暫存器，BP:基底指標暫存器<br>EAX、ECX、EDX、EBX：為ax,bx,cx,dx的延伸，各為32位元<br>ESI、EDI、ESP、EBP：為si,di,sp,bp的延伸，32位元</p>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjuppc0jf0003w4vgc7d2gxjg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/20/cg-ctf/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title"></div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/">X86汇编语言中CPU上的通用寄存器简要说明</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/20/cg-ctf/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/20/write_up of protein/">Write_up of Makerctf</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/18/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 protein<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
