@@ -114,7 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjuppc0jf0003w4vgc7d2gxjg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjuppcwze000080vgohd8jx6l" class="article-share-link">Share</a>
       
       
     </footer>
@@ -134,10 +134,19 @@
   <div class="article-inner">
     
     
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/20/cg-ctf/">南邮ctf的部分re</a>
+    </h1>
+  
+
+      </header>
+    
     <div class="article-entry" itemprop="articleBody">
       
-        <hr>
-<h2 id="南邮ctf的部分re"><a href="#南邮ctf的部分re" class="headerlink" title="南邮ctf的部分re"></a>南邮ctf的部分re</h2><h1 id="1-Py交易"><a href="#1-Py交易" class="headerlink" title="1.Py交易"></a>1.Py交易</h1><p>根据题目知道这是关于python的逆向题，百度找到一个python的反编译工具: Easy Python Decompiler  ;工具下载地址：<a href="http://sourceforge.net/projects/easypythondecompiler/?source=directory" target="_blank" rel="noopener">http://sourceforge.net/projects/easypythondecompiler/?source=directory</a> 安装好之后，直接将题目的pyc文件拖过去打开，得到代码</p>
+        <h1 id="1-Py交易"><a href="#1-Py交易" class="headerlink" title="1.Py交易"></a>1.Py交易</h1><p>根据题目知道这是关于python的逆向题，百度找到一个python的反编译工具: Easy Python Decompiler  ;工具下载地址：<a href="http://sourceforge.net/projects/easypythondecompiler/?source=directory" target="_blank" rel="noopener">http://sourceforge.net/projects/easypythondecompiler/?source=directory</a> 安装好之后，直接将题目的pyc文件拖过去打开，得到代码</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span><span class="params">(message)</span>:</span></span><br><span class="line">    s = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> message:</span><br><span class="line">        x = ord(i) ^ <span class="number">32</span></span><br><span class="line">        x = x + <span class="number">16</span></span><br><span class="line">        s += chr(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> base64.b64encode(s)</span><br><span class="line">correct = <span class="string">'XlNkVmtUI1MgXWBZXCFeKY+AaXNt'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'Input flag:'</span></span><br><span class="line">flag = raw_input()</span><br><span class="line"><span class="keyword">if</span> encode(flag) == correct:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'correct'</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'wrong'</span></span><br></pre></td></tr></table></figure>
 <p>过程很简单，是将flag每个字符的ascii吗与32异或，然后加16，然后base64加密。</p>
 <p>所以将correct解一次base64，然后每个字符ascii码都减下16，接着与32异或即可得到flag </p>
@@ -172,7 +181,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/cg-ctf/" data-id="cjuppc0j40000w4vgu81ea61l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/20/cg-ctf/" data-id="cjuppcwzk000180vgnkauny8l" class="article-share-link">Share</a>
       
       
     </footer>
@@ -229,7 +238,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/write_up of protein/" data-id="cjuppc0jb0001w4vgq67gwcue" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/20/write_up of protein/" data-id="cjuppcwzv000380vghnped6x4" class="article-share-link">Share</a>
       
       
     </footer>
@@ -274,7 +283,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjuppc0jd0002w4vgz1a4txsq" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjuppcwzl000280vgwgi5vjmf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -319,7 +328,7 @@
           </li>
         
           <li>
-            <a href="/2019/04/20/cg-ctf/">(no title)</a>
+            <a href="/2019/04/20/cg-ctf/">南邮ctf的部分re</a>
           </li>
         
           <li>
