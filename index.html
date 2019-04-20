@@ -114,74 +114,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjuppcwze000080vgohd8jx6l" class="article-share-link">Share</a>
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-cg-ctf" class="article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/04/20/cg-ctf/" class="article-date">
-  <time datetime="2019-04-20T15:47:16.895Z" itemprop="datePublished">2019-04-20</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/04/20/cg-ctf/">南邮ctf的部分re</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1-Py交易"><a href="#1-Py交易" class="headerlink" title="1.Py交易"></a>1.Py交易</h1><p>根据题目知道这是关于python的逆向题，百度找到一个python的反编译工具: Easy Python Decompiler  ;工具下载地址：<a href="http://sourceforge.net/projects/easypythondecompiler/?source=directory" target="_blank" rel="noopener">http://sourceforge.net/projects/easypythondecompiler/?source=directory</a> 安装好之后，直接将题目的pyc文件拖过去打开，得到代码</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">encode</span><span class="params">(message)</span>:</span></span><br><span class="line">    s = <span class="string">''</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> message:</span><br><span class="line">        x = ord(i) ^ <span class="number">32</span></span><br><span class="line">        x = x + <span class="number">16</span></span><br><span class="line">        s += chr(x)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> base64.b64encode(s)</span><br><span class="line">correct = <span class="string">'XlNkVmtUI1MgXWBZXCFeKY+AaXNt'</span></span><br><span class="line">flag = <span class="string">''</span></span><br><span class="line"><span class="keyword">print</span> <span class="string">'Input flag:'</span></span><br><span class="line">flag = raw_input()</span><br><span class="line"><span class="keyword">if</span> encode(flag) == correct:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'correct'</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="keyword">print</span> <span class="string">'wrong'</span></span><br></pre></td></tr></table></figure>
-<p>过程很简单，是将flag每个字符的ascii吗与32异或，然后加16，然后base64加密。</p>
-<p>所以将correct解一次base64，然后每个字符ascii码都减下16，接着与32异或即可得到flag </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">decode</span><span class="params">(message)</span>:</span></span><br><span class="line">	s=<span class="string">''</span></span><br><span class="line">	message=base64.b64decode(message)</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> message:</span><br><span class="line">		x=ord(i)</span><br><span class="line">		x=x<span class="number">-16</span></span><br><span class="line">		x=x^<span class="number">32</span></span><br><span class="line">		s+=chr(x)</span><br><span class="line">	<span class="keyword">return</span> s</span><br><span class="line"></span><br><span class="line">correct = <span class="string">'XlNkVmtUI1MgXWBZXCFeKY+AaXNt'</span></span><br><span class="line">flag=decode(correct)</span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
-<h1 id="2-Wxyvm"><a href="#2-Wxyvm" class="headerlink" title="2.Wxyvm"></a>2.Wxyvm</h1><h2 id="1-分析main"><a href="#1-分析main" class="headerlink" title="1.分析main()"></a>1.分析main()</h2><p>elf文件，用64ida打开，查看main()的源代码:</p>
-<p><img src="https://github.com/xd-protein/picture/blob/master/wxyvm1-1.png?raw=true" alt="wxyvm1-1"></p>
-<p>要求满足，长度为24，flag经过sub_4005B6函数的变换后，要与dword_601060相等</p>
-<h2 id="2-分析sub-4005B6"><a href="#2-分析sub-4005B6" class="headerlink" title="2.分析sub_4005B6()"></a>2.分析sub_4005B6()</h2><p><img src="https://github.com/xd-protein/picture/blob/master/wxyvn1-2.png?raw=true" alt="wxyvn1-2"></p>
-<p>byte_6010C0中有15000个元素，每三个分为一组。每组的第一个元素确定进行哪种运算(case v0)，第二个元素(result)确定flag的哪一位进行运算，第三个元素(v3)与flag对应的那一位进行运算。</p>
-<h2 id="3-运行逆向脚本"><a href="#3-运行逆向脚本" class="headerlink" title="3.运行逆向脚本"></a>3.运行逆向脚本</h2><p>因为15000个元素实在是太多了，选中再复制太不方便了,就在想怎么能得到这些数据。</p>
-<p>百度得知 ida的File-&gt;Script file 可以直接运行脚本，有两种: idc 和 python.  这里使用python </p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"> </span><br><span class="line">buf=idaapi.get_many_bytes(<span class="number">0x601060</span>, <span class="number">24</span>*<span class="number">4</span>) <span class="comment">#获得dword_601060的所有byte</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#每4个byte转为一个int存入数组</span></span><br><span class="line">dw_601060=[]</span><br><span class="line">i=<span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i&lt;<span class="number">24</span>*<span class="number">4</span>:</span><br><span class="line">	dw_601060.append((struct.unpack(<span class="string">"i"</span>, buf[i:i+<span class="number">4</span>])[<span class="number">0</span>]))</span><br><span class="line">	i+=<span class="number">4</span></span><br><span class="line"> </span><br><span class="line">byte_6010C0=idaapi.get_many_bytes(<span class="number">0x6010C0</span>, <span class="number">15000</span>)<span class="comment">#获取byte_6010C0的所有byte</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">#逆向sub_400586</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">sub_400586_re</span><span class="params">(byte_6010C0,dw_601060)</span>:</span></span><br><span class="line">	result=<span class="number">0</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> [j <span class="keyword">for</span> j <span class="keyword">in</span> range(<span class="number">14999</span>,<span class="number">-1</span>,<span class="number">-1</span>) <span class="keyword">if</span> j%<span class="number">3</span>==<span class="number">0</span>]:<span class="comment">#倒序循环</span></span><br><span class="line">		v0=struct.unpack(<span class="string">"i"</span>, bytearray([byte_6010C0[i],<span class="string">'\x00'</span>,<span class="string">'\x00'</span>,<span class="string">'\x00'</span>]))[<span class="number">0</span>]<span class="comment">#将需要的byte转为int使用</span></span><br><span class="line">		v3=struct.unpack(<span class="string">"i"</span>, bytearray([byte_6010C0[i+<span class="number">2</span>],<span class="string">'\x00'</span>,<span class="string">'\x00'</span>,<span class="string">'\x00'</span>]))[<span class="number">0</span>]</span><br><span class="line">		result=struct.unpack(<span class="string">"i"</span>, bytearray([byte_6010C0[i+<span class="number">1</span>],<span class="string">'\x00'</span>,<span class="string">'\x00'</span>,<span class="string">'\x00'</span>]))[<span class="number">0</span>]</span><br><span class="line">		<span class="keyword">if</span> v0==<span class="number">1</span>:</span><br><span class="line">			dw_601060[result]-=v3</span><br><span class="line">		<span class="keyword">elif</span> v0==<span class="number">2</span>:</span><br><span class="line">			dw_601060[result]+=v3</span><br><span class="line">		<span class="keyword">elif</span> v0==<span class="number">3</span>:</span><br><span class="line">			dw_601060[result]^=v3</span><br><span class="line">		<span class="keyword">elif</span> v0==<span class="number">4</span>:</span><br><span class="line">			dw_601060[result]/=v3</span><br><span class="line">		<span class="keyword">elif</span> v0==<span class="number">5</span>:</span><br><span class="line">			dw_601060[result]^=dw_601060[v3]</span><br><span class="line">	<span class="keyword">print</span> <span class="string">''</span>.join([str(chr(int(i)&amp;<span class="number">0x00FF</span>))<span class="keyword">for</span> i <span class="keyword">in</span> dw_601060])</span><br><span class="line">	<span class="keyword">return</span> result</span><br><span class="line"> </span><br><span class="line">sub_400586_re(byte_6010C0,dw_601060)</span><br></pre></td></tr></table></figure>
-<p>原函数是从0-15000依次对flag进行操作的，所以逆向需要从15000倒过来进行逆操作。运行脚本即可得到flag</p>
-<p>这道题最大的收获是知道了ida有一个专门的idapython插件，可以用python来写ida的脚本，在ida里运行，这样可以直接得到数据，更加方便。</p>
-<h1 id="3-maze"><a href="#3-maze" class="headerlink" title="3.maze"></a>3.maze</h1><h2 id="1-分析开头"><a href="#1-分析开头" class="headerlink" title="1.分析开头"></a>1.分析开头</h2><p>elf 用ida64打开，f5看main()的源码。开头是这样的</p>
-<p><img src="https://github.com/xd-protein/picture/blob/master/maze-1.png?raw=true" alt="maze-1"></p>
-<p>这是说flag为24长度，并且要以“nctf{”开头，“}”结尾。  然后从第六位开始进行一些操作。</p>
-<p>结合流程图<img src="https://github.com/xd-protein/picture/blob/master/maze-2.png?raw=true" alt="maze-2"></p>
-<p>百度得知有很多ida常用宏定义。 SHIDWORD为*(&amp;v9+1) ，即取v9的下一字节 。</p>
-<h2 id="2-分析四种操作"><a href="#2-分析四种操作" class="headerlink" title="2.分析四种操作"></a>2.分析四种操作</h2><p>‘o’ ‘O’对v9的下一位进行操作，‘0‘和’.‘对v9进行操作。</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400650</span><span class="params">(_DWORD *a1)</span><span class="comment">//(_DWORD *)&amp;v9 + 1 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//为O（0x4f）的时候   </span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = (*a1)--;</span><br><span class="line">  <span class="keyword">return</span> v1 &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400660</span><span class="params">(<span class="keyword">int</span> *a1)</span><span class="comment">//(int *)&amp;v9 + 1</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">///为o的时候</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = *a1 + <span class="number">1</span>;</span><br><span class="line">  *a1 = v1;</span><br><span class="line">  <span class="keyword">return</span> v1 &lt; <span class="number">8</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400670</span><span class="params">(_DWORD *a1)</span><span class="comment">//&amp;v9</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//为.的时候</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = (*a1)--;</span><br><span class="line">  <span class="keyword">return</span> v1 &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400680</span><span class="params">(<span class="keyword">int</span> *a1)</span><span class="comment">//(int *)&amp;v9</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//为0(0x30)的时候</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = *a1 + <span class="number">1</span>;</span><br><span class="line">  *a1 = v1;</span><br><span class="line">  <span class="keyword">return</span> v1 &lt; <span class="number">8</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>每一次循环都会进行这样的判断</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> int8)sub_400690((int64)asc_601060, SHIDWORD(v9), v9) )</span><br></pre></td></tr></table></figure>
-<h2 id="3-走迷宫"><a href="#3-走迷宫" class="headerlink" title="3.走迷宫"></a>3.走迷宫</h2><p>进入sub_400690 ,看见这样一句话:result = <em>(_BYTE </em>)(a1 + a2 + 8LL * a3);      a1,2,3对应三个参数。</p>
-<p>所以可以推出 v9的下一字节 表示列，v9表示行，  O为左移一位，o为右移一位，.为上移一位，0为下移一位 </p>
-<p>asc_601060为迷宫，每行八个元素。</p>
-<p><img src="https://github.com/xd-protein/picture/blob/master/maze-3.png?raw=true" alt="maze-3"></p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ( *(&amp;asc_601060[8 * (signed int)v9] + SHIDWORD(v9)) != &apos;#&apos; )</span><br></pre></td></tr></table></figure>
-<p>根据这句话知道以’#’结尾,所以走的顺序为 ：右下右右下下左下下下右右右右上上左左 </p>
-<p>对应字符 o0oo00O000oooo..OO   加上开始头的限制就得到了flag。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/cg-ctf/" data-id="cjuppcwzk000180vgnkauny8l" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjupphht10001i4vgpxm7x8kw" class="article-share-link">Share</a>
       
       
     </footer>
@@ -238,7 +171,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/write_up of protein/" data-id="cjuppcwzv000380vghnped6x4" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/20/write_up of protein/" data-id="cjupphht40002i4vglvxgismv" class="article-share-link">Share</a>
       
       
     </footer>
@@ -283,7 +216,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjuppcwzl000280vgwgi5vjmf" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjupphhsv0000i4vgk8ogd6f9" class="article-share-link">Share</a>
       
       
     </footer>
@@ -325,10 +258,6 @@
         
           <li>
             <a href="/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/">X86汇编语言中CPU上的通用寄存器简要说明</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/20/cg-ctf/">南邮ctf的部分re</a>
           </li>
         
           <li>
