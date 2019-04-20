@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>南邮ctf.maze | xd-protein</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="maze1.分析开头elf 用ida64打开，f5看main()的源码。开头是这样的  这是说flag为24长度，并且要以“nctf{”开头，“}”结尾。  然后从第六位开始进行一些操作。 结合流程图 百度得知有很多ida常用宏定义。 SHIDWORD为*(&amp;amp;v9+1) ，即取v9的下一字节 。 2.分析四种操作‘o’ ‘O’对v9的下一位进行操作，‘0‘和’.‘对v9进行操作。 1234">
+<meta property="og:type" content="article">
+<meta property="og:title" content="南邮ctf.maze">
+<meta property="og:url" content="http://yoursite.com/2019/04/21/南邮ctf.maze/index.html">
+<meta property="og:site_name" content="xd-protein">
+<meta property="og:description" content="maze1.分析开头elf 用ida64打开，f5看main()的源码。开头是这样的  这是说flag为24长度，并且要以“nctf{”开头，“}”结尾。  然后从第六位开始进行一些操作。 结合流程图 百度得知有很多ida常用宏定义。 SHIDWORD为*(&amp;amp;v9+1) ，即取v9的下一字节 。 2.分析四种操作‘o’ ‘O’对v9的下一位进行操作，‘0‘和’.‘对v9进行操作。 1234">
+<meta property="og:locale" content="default">
+<meta property="og:image" content="https://github.com/xd-protein/picture/blob/master/maze-1.png?raw=true">
+<meta property="og:image" content="https://github.com/xd-protein/picture/blob/master/maze-2.png?raw=true">
+<meta property="og:image" content="https://github.com/xd-protein/picture/blob/master/maze-3.png?raw=true">
+<meta property="og:updated_time" content="2019-04-20T16:28:22.453Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="南邮ctf.maze">
+<meta name="twitter:description" content="maze1.分析开头elf 用ida64打开，f5看main()的源码。开头是这样的  这是说flag为24长度，并且要以“nctf{”开头，“}”结尾。  然后从第六位开始进行一些操作。 结合流程图 百度得知有很多ida常用宏定义。 SHIDWORD为*(&amp;amp;v9+1) ，即取v9的下一字节 。 2.分析四种操作‘o’ ‘O’对v9的下一位进行操作，‘0‘和’.‘对v9进行操作。 1234">
+<meta name="twitter:image" content="https://github.com/xd-protein/picture/blob/master/maze-1.png?raw=true">
+  
+    <link rel="alternate" href="/atom.xml" title="xd-protein" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">xd-protein</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-南邮ctf.maze" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/21/南邮ctf.maze/" class="article-date">
+  <time datetime="2019-04-20T16:28:22.452Z" itemprop="datePublished">2019-04-21</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      南邮ctf.maze
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="maze"><a href="#maze" class="headerlink" title="maze"></a>maze</h1><h2 id="1-分析开头"><a href="#1-分析开头" class="headerlink" title="1.分析开头"></a>1.分析开头</h2><p>elf 用ida64打开，f5看main()的源码。开头是这样的</p>
+<p><img src="https://github.com/xd-protein/picture/blob/master/maze-1.png?raw=true" alt="maze-1"></p>
+<p>这是说flag为24长度，并且要以“nctf{”开头，“}”结尾。  然后从第六位开始进行一些操作。</p>
+<p>结合流程图<img src="https://github.com/xd-protein/picture/blob/master/maze-2.png?raw=true" alt="maze-2"></p>
+<p>百度得知有很多ida常用宏定义。 SHIDWORD为*(&amp;v9+1) ，即取v9的下一字节 。</p>
+<h2 id="2-分析四种操作"><a href="#2-分析四种操作" class="headerlink" title="2.分析四种操作"></a>2.分析四种操作</h2><p>‘o’ ‘O’对v9的下一位进行操作，‘0‘和’.‘对v9进行操作。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400650</span><span class="params">(_DWORD *a1)</span><span class="comment">//(_DWORD *)&amp;v9 + 1 </span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//为O（0x4f）的时候   </span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = (*a1)--;</span><br><span class="line">  <span class="keyword">return</span> v1 &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400660</span><span class="params">(<span class="keyword">int</span> *a1)</span><span class="comment">//(int *)&amp;v9 + 1</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">///为o的时候</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = *a1 + <span class="number">1</span>;</span><br><span class="line">  *a1 = v1;</span><br><span class="line">  <span class="keyword">return</span> v1 &lt; <span class="number">8</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400670</span><span class="params">(_DWORD *a1)</span><span class="comment">//&amp;v9</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//为.的时候</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = (*a1)--;</span><br><span class="line">  <span class="keyword">return</span> v1 &gt; <span class="number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">bool</span> __<span class="function">fastcall <span class="title">sub_400680</span><span class="params">(<span class="keyword">int</span> *a1)</span><span class="comment">//(int *)&amp;v9</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"><span class="comment">//为0(0x30)的时候</span></span><br><span class="line">  <span class="keyword">int</span> v1; <span class="comment">// eax@1</span></span><br><span class="line"></span><br><span class="line">  v1 = *a1 + <span class="number">1</span>;</span><br><span class="line">  *a1 = v1;</span><br><span class="line">  <span class="keyword">return</span> v1 &lt; <span class="number">8</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每一次循环都会进行这样的判断</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( !(<span class="keyword">unsigned</span> int8)sub_400690((int64)asc_601060, SHIDWORD(v9), v9) )</span><br></pre></td></tr></table></figure>
+<h2 id="3-走迷宫"><a href="#3-走迷宫" class="headerlink" title="3.走迷宫"></a>3.走迷宫</h2><p>进入sub_400690 ,看见这样一句话:result = <em>(_BYTE </em>)(a1 + a2 + 8LL * a3);      a1,2,3对应三个参数。</p>
+<p>所以可以推出 v9的下一字节 表示列，v9表示行，  O为左移一位，o为右移一位，.为上移一位，0为下移一位 </p>
+<p>asc_601060为迷宫，每行八个元素。</p>
+<p><img src="https://github.com/xd-protein/picture/blob/master/maze-3.png?raw=true" alt="maze-3"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">if ( *(&amp;asc_601060[8 * (signed int)v9] + SHIDWORD(v9)) != &apos;#&apos; )</span><br></pre></td></tr></table></figure>
+<p>根据这句话知道以’#’结尾,所以走的顺序为 ：右下右右下下左下下下右右右右上上左左 </p>
+<p>对应字符 o0oo00O000oooo..OO   加上开始头的限制就得到了flag。</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/21/南邮ctf.maze/" data-id="cjuppwe040004ysvgn6hvk6at" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">X86汇编语言中CPU上的通用寄存器简要说明</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/21/南邮ctf.maze/">南邮ctf.maze</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/">X86汇编语言中CPU上的通用寄存器简要说明</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/20/cg-ctf/">南邮ctf的部分re</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/20/write_up of protein/">Write_up of Makerctf</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/18/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 protein<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
