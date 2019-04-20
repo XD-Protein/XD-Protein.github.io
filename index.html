@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:locale" content="default">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Hexo">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="post-write_up of protein" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/19/write_up of protein/" class="article-date">
+  <time datetime="2019-04-19T10:50:13.631Z" itemprop="datePublished">2019-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Re"><a href="#Re" class="headerlink" title="Re"></a>Re</h1><h2 id="1-NET-解题人-protein"><a href="#1-NET-解题人-protein" class="headerlink" title="1.  .NET : 解题人 protein"></a>1.  .NET : 解题人 protein</h2><h3 id="1-1反编译"><a href="#1-1反编译" class="headerlink" title="1.1反编译"></a>1.1反编译</h3><p>根据题目名，使用.NET 反编译工具 ILspy 进行反编译  得到源码</p>
+<p><img src="C:\Users\Dell\Desktop\write_up of protein\Re-1.1.jpg" alt="Re-1.1"></p>
+<p>经分析 这是一个DES加密的过程，还有一个将每个字符转换为两位十六进制的操作</p>
+<h3 id="1-2-对应解密"><a href="#1-2-对应解密" class="headerlink" title="1.2 对应解密"></a>1.2 对应解密</h3><p>先把每两位十六进制转换回去，然后就是DES解密，key是已给出的 “byfa1con”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line">using System;</span><br><span class="line">using System.IO ;</span><br><span class="line">using System.Security.Cryptography;</span><br><span class="line">using System.Text;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">namespace decrypt</span><br><span class="line">&#123;</span><br><span class="line">    internal class Program</span><br><span class="line">    &#123;</span><br><span class="line">        private static string key = &quot;byfa1con&quot;;</span><br><span class="line">        public static string DecryptString(string pToDecrypt)</span><br><span class="line">        &#123;</span><br><span class="line"></span><br><span class="line">            DESCryptoServiceProvider des = new DESCryptoServiceProvider();</span><br><span class="line">            byte[] inputByteArray = new byte[pToDecrypt.Length / 2];</span><br><span class="line">            for (int x = 0; x &lt; pToDecrypt.Length / 2; x++)</span><br><span class="line">            &#123;</span><br><span class="line">                int i = (Convert.ToInt32(pToDecrypt.Substring(x * 2, 2), 16));</span><br><span class="line">                inputByteArray[x] = (byte)i;</span><br><span class="line">    </span><br><span class="line">            &#125;</span><br><span class="line">            des.Key = UTF8Encoding.UTF8.GetBytes(key);</span><br><span class="line">            des.IV = UTF8Encoding.UTF8.GetBytes(key);</span><br><span class="line">            MemoryStream ms = new MemoryStream();</span><br><span class="line">            CryptoStream cs = new CryptoStream(ms, des.CreateDecryptor(), CryptoStreamMode.Write);</span><br><span class="line">            cs.Write(inputByteArray, 0, inputByteArray.Length);</span><br><span class="line">            cs.FlushFinalBlock();</span><br><span class="line">            StringBuilder ret = new StringBuilder();</span><br><span class="line">            return Encoding.UTF8.GetString(ms.ToArray());</span><br><span class="line">    </span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">        public static void Main(string[] args)</span><br><span class="line">        &#123;   string a = &quot;F79FD2222A8F3C88517A3CD91E0969168E491209EC6822913F76C86EAC94A8C8&quot;;</span><br><span class="line">            string c = Program.DecryptString(a);</span><br><span class="line">            Console.Write(&quot;\n &#123;0&#125;&quot;, c);</span><br><span class="line">            Console.ReadKey(true);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行C#程序得到flag ：</p>
+<p><img src="C:\Users\Dell\Desktop\write_up of protein\re-1.2.png" alt="re-1.2"></p>
+<h3 id="1-3-参考"><a href="#1-3-参考" class="headerlink" title="1.3 参考"></a>1.3 参考</h3><p>解密代码 参考了这个网站  <a href="https://www.cnblogs.com/ybtools/p/3210795.html" target="_blank" rel="noopener">https://www.cnblogs.com/ybtools/p/3210795.html</a></p>
+<h1 id="CRYPTO"><a href="#CRYPTO" class="headerlink" title="CRYPTO"></a>CRYPTO</h1><h2 id="1-Affine-code-解题人-protein"><a href="#1-Affine-code-解题人-protein" class="headerlink" title="1.Affine_code : 解题人 protein."></a>1.Affine_code : 解题人 protein.</h2><h3 id="1-1-base64解码得到真正的codebook"><a href="#1-1-base64解码得到真正的codebook" class="headerlink" title="1.1 base64解码得到真正的codebook"></a>1.1 base64解码得到真正的codebook</h3><p>放射加密的codebook应该没有重复的字母或数字，因此怀疑题目给的codebook用某种方法加密过</p>
+<p>最后发现是base64   解码后得到真正的codebook：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">l8P065muZL4AynwXI2phiRJk7DM3B&#125;Fx&#123;TVvNYGQjdfqo1SWKH9_UaeOsrtEcbgCz</span><br></pre></td></tr></table></figure>
+<p>确实没有重复的数字和字母。 这也就求出了CB的 length1.</p>
+<h3 id="1-2-猜测并爆破-求a-b"><a href="#1-2-猜测并爆破-求a-b" class="headerlink" title="1.2 猜测并爆破 求a b"></a>1.2 猜测并爆破 求a b</h3><p>猜测flag前几位是maker ，于是用mak三位进行爆破。。我是用python写的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">CB=<span class="string">'l8P065muZL4AynwXI2phiRJk7DM3B&#125;Fx&#123;TVvNYGQjdfqo1SWKH9_UaeOsrtEcbgCz'</span></span><br><span class="line">flag=<span class="string">'mak'</span></span><br><span class="line">trans=[]</span><br><span class="line">ciphertext=[]</span><br><span class="line">true_cpt=[<span class="string">'H'</span>,<span class="string">'m'</span>,<span class="string">'R'</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(flag)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(len(CB)):</span><br><span class="line">        <span class="keyword">if</span>(CB[j]==flag[i]):</span><br><span class="line">            trans.append(j)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> a <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">    <span class="keyword">for</span> b <span class="keyword">in</span> range(<span class="number">100</span>):</span><br><span class="line">        <span class="keyword">for</span> k <span class="keyword">in</span> range(len(trans)):</span><br><span class="line">            index=(a*trans[k]+b)%len(CB)</span><br><span class="line">            ciphertext.append(CB[index])</span><br><span class="line">            <span class="keyword">if</span>(ciphertext==true_cpt):</span><br><span class="line">                <span class="keyword">print</span> a,b</span><br><span class="line">        ciphertext=[]</span><br></pre></td></tr></table></figure>
+<p>结果有四组</p>
+<p>6 13<br>6 78<br>71 13<br>71 78</p>
+<p>先试第一组，用maker的er两位进行验证，发现成立。于是确定a=6 b=13</p>
+<h3 id="1-3-解密"><a href="#1-3-解密" class="headerlink" title="1.3 解密"></a>1.3 解密</h3><p>现在a，b，length1都确定了，可以进行解密</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CB=<span class="string">'l8P065muZL4AynwXI2phiRJk7DM3B&#125;Fx&#123;TVvNYGQjdfqo1SWKH9_UaeOsrtEcbgCz'</span></span><br><span class="line">flag=[]</span><br><span class="line">ciphertext=[<span class="string">'H'</span>, <span class="string">'m'</span>, <span class="string">'R'</span>, <span class="string">'y'</span>, <span class="string">'F'</span>, <span class="string">'K'</span>, <span class="string">'N'</span>, <span class="string">'5'</span>, <span class="string">'4'</span>, <span class="string">'8'</span>, <span class="string">'x'</span>, <span class="string">'M'</span>, <span class="string">'c'</span>, <span class="string">'F'</span>, <span class="string">'Z'</span>, <span class="string">'N'</span>, <span class="string">'O'</span>, <span class="string">'k'</span>, <span class="string">'m'</span>, <span class="string">'N'</span>, <span class="string">'0'</span>, <span class="string">'2'</span>, <span class="string">'M'</span>, <span class="string">'7'</span>, <span class="string">'E'</span>, <span class="string">'x'</span>, <span class="string">'M'</span>, <span class="string">'E'</span>, <span class="string">'w'</span>, <span class="string">'5'</span>, <span class="string">'5'</span>, <span class="string">'k'</span>, <span class="string">'M'</span>, <span class="string">'y'</span>, <span class="string">'r'</span>]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span>  range(len(ciphertext)):</span><br><span class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> range(len(CB)):</span><br><span class="line">        index=(<span class="number">6</span>*j+<span class="number">13</span>)%len(CB)</span><br><span class="line">        <span class="keyword">if</span>(CB[index]==ciphertext[i]):</span><br><span class="line">            flag.append(CB[j])</span><br><span class="line"><span class="keyword">print</span> <span class="string">''</span>.join(flag)</span><br></pre></td></tr></table></figure>
+<p>运行即可得到flag：</p>
+<p><img src="C:\Users\Dell\Desktop\write_up of protein\CRYPTO-1.3.png" alt="CRYPTO-1.3"></p>
+<h1 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h1><h2 id="1-Real-Sign-IN-解题人-protein"><a href="#1-Real-Sign-IN-解题人-protein" class="headerlink" title="1. Real_Sign_IN : 解题人   protein"></a>1. Real_Sign_IN : 解题人   protein</h2><h3 id="1-1-真正的签到题。。直接上截图"><a href="#1-1-真正的签到题。。直接上截图" class="headerlink" title="1.1 真正的签到题。。直接上截图"></a>1.1 真正的签到题。。直接上截图</h3><p><img src="C:\Users\Dell\Desktop\write_up of protein\MISC-1.1.jpg" alt="MISC-1.1"></p>
+<h2 id="2-问卷-解题人-protein"><a href="#2-问卷-解题人-protein" class="headerlink" title="2.问卷 :解题人  protein"></a>2.问卷 :解题人  protein</h2><h3 id="2-1-截图"><a href="#2-1-截图" class="headerlink" title="2.1 截图"></a>2.1 截图</h3><p>  问卷，最后一个问题就是flag   下面是截图</p>
+<p><img src="C:\Users\Dell\Desktop\write_up of protein\MISC-2.1.png" alt="MISC-2.1"></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/19/write_up of protein/" data-id="cjuozcul10000wovg19x5ptvk" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/18/hello-world/" class="article-date">
+  <time datetime="2019-04-18T15:14:51.785Z" itemprop="datePublished">2019-04-18</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/18/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjuozcula0001wovgobysulvv" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">April 2019</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2019/04/19/write_up of protein/">(no title)</a>
+          </li>
+        
+          <li>
+            <a href="/2019/04/18/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2019 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+
+
+  </div>
+</body>
+</html>
