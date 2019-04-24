@@ -62,6 +62,65 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-makerctf-easy-re-题解" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/04/24/makerctf-easy-re-题解/" class="article-date">
+  <time datetime="2019-04-24T10:46:05.416Z" itemprop="datePublished">2019-04-24</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/04/24/makerctf-easy-re-题解/">makerctf-easyre-题解</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="1-堆栈平衡"><a href="#1-堆栈平衡" class="headerlink" title="1.堆栈平衡"></a>1.堆栈平衡</h1><p>用ida查看源码，找到主要的部分：</p>
+<p><img src="https://github.com/xd-protein/picture/blob/master/easyre-1.png?raw=true" alt="easyre-1"></p>
+<p>发现sub_4013F4() 不能使用F5 查看源码</p>
+<p>:<img src="https://github.com/xd-protein/picture/blob/master/easyre-2.png?raw=true" alt="easyre-2"></p>
+<p>打开Options -General -Disassembly  -Display disassembly line parts -Stack pointer，打勾<img src="https://github.com/xd-protein/picture/blob/master/easyre-3.png?raw=true" alt="easyre-3"></p>
+<p>发现 00401585处的 为-10，通过alt+k调整sp：<img src="https://github.com/xd-protein/picture/blob/master/easyre-4.png?raw=true" alt="easyre-4"></p>
+<p>Ok，之后，即可F5 查看sub_4013F4() 的源码 </p>
+<h1 id="2-类似base64加密"><a href="#2-类似base64加密" class="headerlink" title="2.类似base64加密"></a>2.类似base64加密</h1><p>经分析，sub_4013F4()是类似于base64的加密算法，只是把base64的’ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/‘</p>
+<p>换为了 函数中的byte_402000[]:‘‘‘@,.1fjsz^+{5bkrA&amp;=}6a8D9E:gv)]ux$~”3dity%_;w#`/2ehlqB*-[70mpC(4c’’’</p>
+<h1 id="3-分析后两个函数"><a href="#3-分析后两个函数" class="headerlink" title="3.分析后两个函数"></a>3.分析后两个函数</h1><p>Dst[]是flag经过su b_4013F4()加密之后得到的。</p>
+<p>倒数第二个函数。sub_40158A 对Dst[]进行异或和加:</p>
+<p><img src="https://github.com/xd-protein/picture/blob/master/easyre-5.png?raw=true" alt="easyre-5"></p>
+<p>与字符串unk_4020F0[]进行异或。与 i 进行相加。</p>
+<p>最后一个函数，是与dword_402060[]，对比，一样则congratulations。</p>
+<h1 id="4-逆向解密"><a href="#4-逆向解密" class="headerlink" title="4.逆向解密"></a>4.逆向解密</h1><p>先对dword_402060[]逆sub_40158A()得到Dst[],</p>
+<p>然后用Dst[]每个字符对应byte_402000[]的序号 去对应真正的base64 （即 A-B. a-z，0-9，+/），然后得到真正base64加密后的字符串。最后base64解密。</p>
+<p>用ida运行下列脚本即可得到flag:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="comment">#下面是得到dword_402060[]的int 形式</span></span><br><span class="line">buf=idaapi.get_many_bytes(<span class="number">0x402060</span>, <span class="number">36</span>*<span class="number">4</span>)</span><br><span class="line">dw_402060=[]</span><br><span class="line">i=<span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i&lt;<span class="number">36</span>*<span class="number">4</span>:</span><br><span class="line">	dw_402060.append((struct.unpack(<span class="string">"i"</span>, buf[i:i+<span class="number">4</span>])[<span class="number">0</span>]))</span><br><span class="line">	i+=<span class="number">4</span></span><br><span class="line"><span class="comment">#print dw_402060      </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#下面是得到unk_4020F0[]的int 形式</span></span><br><span class="line">buf=idaapi.get_many_bytes(<span class="number">0x4020F0</span>, <span class="number">36</span>*<span class="number">4</span>)</span><br><span class="line">dw_4020F0=[]</span><br><span class="line">i=<span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> i&lt;<span class="number">36</span>*<span class="number">4</span>:</span><br><span class="line">	dw_4020F0.append((struct.unpack(<span class="string">"i"</span>, buf[i:i+<span class="number">4</span>])[<span class="number">0</span>]))</span><br><span class="line">	i+=<span class="number">4</span></span><br><span class="line"><span class="comment">#print dw_4020F0  </span></span><br><span class="line"></span><br><span class="line"><span class="comment">#下面是re_sub_40158A()  从而得到Dst </span></span><br><span class="line">c=[]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(dw_402060)):    </span><br><span class="line">    dw_402060[i]-=i</span><br><span class="line">    dw_402060[i]=int(dw_402060[i])</span><br><span class="line">    dw_402060[i]^=int(dw_4020F0[i])</span><br><span class="line">    c.append(chr(dw_402060[i]))</span><br><span class="line"><span class="comment">#print ''.join(c)</span></span><br><span class="line">c=<span class="string">''</span>.join(c)</span><br><span class="line"></span><br><span class="line"><span class="comment">#下面是解 类似于base64加密的过程 用Dst[]每个字符对应byte_402000[]的序号 去对应真正的base64加密字符串 </span></span><br><span class="line">a=<span class="string">'''@,.1fjsz^+&#123;5bkrA&amp;=&#125;6a8D9E:gv)]ux$~"3dity%_;w#`/2ehlqB*-[70mpC(4c'''</span></span><br><span class="line">b=<span class="string">'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'</span></span><br><span class="line">d=[]</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(len(c)):    </span><br><span class="line">	<span class="keyword">for</span> j <span class="keyword">in</span> range(len(a)):</span><br><span class="line">		<span class="keyword">if</span>(c[i]==a[j]):</span><br><span class="line">			d.append(b[j])</span><br><span class="line">d=<span class="string">''</span>.join(d) </span><br><span class="line">flag=base64.b64decode(d)  //解真正的base64</span><br><span class="line"><span class="keyword">print</span> flag</span><br></pre></td></tr></table></figure>
+<p>dw_402060=[97, 112, 97, 86, 116, 77, 114, 45, 126, 111, 65, 50, 16, 102, 88, 88, 42, 135, 111, 110, 50, 71, 92, 113, 59, 146, 59, 99, 55, 87, 44, 94, 133, 148, 71, 51]</p>
+<p>unk_4020F0=[23, 43, 54, 124, 23, 12, 4, 21, 43, 21, 13, 87, 65, 45, 32, 56, 32, 64, 24, 25, 39, 67, 44, 43, 26, 34, 67, 45, 34, 23, 54, 65, 76, 89, 76, 56]</p>
+<p>c (即Dst)=’vDi/gDh3]s:pEtjq:6EB9qjq9[be9-8~)*i(‘</p>
+<p>d(真base64加密)=’bWluaWxjdGZ7YmFzZTY0XzFzX3MwX2Vhc1l9’</p>
+<p>flag=’minilctf{base64_1s_s0_easY}’</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2019/04/24/makerctf-easy-re-题解/" data-id="cjuv3jm1t0001tcvgofzy5ymh" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-南邮ctf.maze" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
     <a href="/2019/04/21/南邮ctf.maze/" class="article-date">
@@ -104,7 +163,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/21/南邮ctf.maze/" data-id="cjuppwe040004ysvgn6hvk6at" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/21/南邮ctf.maze/" data-id="cjuv3jm1y0004tcvgpfso5icn" class="article-share-link">Share</a>
       
       
     </footer>
@@ -166,7 +225,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjuppwdzm0000ysvgzxdqsvbg" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/21/X86 汇编语言中CPU上的通用寄存器简要说明/" data-id="cjuv3jm1w0002tcvg165qifrf" class="article-share-link">Share</a>
       
       
     </footer>
@@ -216,7 +275,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/cg-ctf/" data-id="cjuppwdzr0001ysvgwfpetcmv" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/20/cg-ctf/" data-id="cjuv3jm1o0000tcvgrc85zb8m" class="article-share-link">Share</a>
       
       
     </footer>
@@ -273,7 +332,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/20/write_up of protein/" data-id="cjuppwdzt0003ysvggu1mbjqr" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/20/write_up of protein/" data-id="cjuv3jm1x0003tcvg3q11ptyb" class="article-share-link">Share</a>
       
       
     </footer>
@@ -318,7 +377,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjuppwdzs0002ysvg6x1zupa0" class="article-share-link">Share</a>
+      <a data-url="http://yoursite.com/2019/04/18/hello-world/" data-id="cjuv3jm1z0005tcvgpgxqoykm" class="article-share-link">Share</a>
       
       
     </footer>
@@ -359,6 +418,10 @@
       <ul>
         
           <li>
+            <a href="/2019/04/24/makerctf-easy-re-题解/">makerctf-easyre-题解</a>
+          </li>
+        
+          <li>
             <a href="/2019/04/21/南邮ctf.maze/">南邮ctf.maze</a>
           </li>
         
@@ -372,10 +435,6 @@
         
           <li>
             <a href="/2019/04/20/write_up of protein/">Write_up of Makerctf</a>
-          </li>
-        
-          <li>
-            <a href="/2019/04/18/hello-world/">Hello World</a>
           </li>
         
       </ul>
